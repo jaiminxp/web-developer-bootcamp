@@ -43,3 +43,16 @@ Movie.find({ title: "Avatar" }).then((res) => console.log(res));
 
 //Finding by Id
 Movie.findById("62d6543c6ddb49c14de9e4a1").then((res) => console.log(res));
+
+//Updating data
+Movie.updateMany(
+  { title: { $in: ["Infinity War", "Thor"] } },
+  { score: 10 }
+).then((res) => console.log(res));
+
+//Return the updated result
+Movie.findOneAndUpdate(
+  { title: "batman" },
+  { title: "The Batman" },
+  { new: true }
+).then((res) => console.log(res));
