@@ -37,3 +37,9 @@ Movie.insertMany([
   console.log("IT WORKED!");
   console.log(data);
 });
+
+//Finding data
+Movie.find({ title: "Avatar" }).then((res) => console.log(res));
+
+//Finding by Id
+Movie.findById("62d6543c6ddb49c14de9e4a1").then((res) => console.log(res));
