@@ -68,18 +68,24 @@ productSchema.methods.addCatrgory = function (category) {
   return this.save();
 };
 
-const Product = new mongoose.model("Product", productSchema);
-
-const findProduct = async () => {
-  const foundProduct = await Product.findOne({ name: "Bike helmet" });
-  console.log(foundProduct);
-  await foundProduct.toggleOnSale();
-  console.log(foundProduct);
-  await foundProduct.addCatrgory("Outdoors");
-  console.log(foundProduct);
+productSchema.statics.fireSale = function () {
+  return this.updateMany({}, { onSale: true, price: 0 });
 };
 
-findProduct();
+const Product = new mongoose.model("Product", productSchema);
+
+// const findProduct = async () => {
+//   const foundProduct = await Product.findOne({ name: "Bike helmet" });
+//   console.log(foundProduct);
+//   await foundProduct.toggleOnSale();
+//   console.log(foundProduct);
+//   await foundProduct.addCatrgory("Outdoors");
+//   console.log(foundProduct);
+// };
+
+// findProduct();
+
+Product.fireSale().then((res) => console.log(res));
 
 // //not including a required property (name)
 // const bike = new Product({
