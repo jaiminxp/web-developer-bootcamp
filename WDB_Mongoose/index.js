@@ -56,3 +56,13 @@ Movie.findOneAndUpdate(
   { title: "The Batman" },
   { new: true }
 ).then((res) => console.log(res));
+
+//Deleting data
+Movie.deleteMany({ year: { $lt: 2022 } }).then((res) => console.log(res));
+
+//Return the deleted result
+Movie.findOneAndDelete({ title: "The Batman" }).then(printRes);
+
+function printRes(res) {
+  console.log(res);
+}
