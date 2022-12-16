@@ -53,7 +53,33 @@ const productSchema = new mongoose.Schema({
   },
 });
 
+productSchema.methods.greet = function () {
+  console.log("HIII!");
+  console.log(`- from ${this.name}`);
+};
+
+productSchema.methods.toggleOnSale = function () {
+  this.onSale = !this.onSale;
+  return this.save();
+};
+
+productSchema.methods.addCatrgory = function (category) {
+  this.categories.push(category);
+  return this.save();
+};
+
 const Product = new mongoose.model("Product", productSchema);
+
+const findProduct = async () => {
+  const foundProduct = await Product.findOne({ name: "Bike helmet" });
+  console.log(foundProduct);
+  await foundProduct.toggleOnSale();
+  console.log(foundProduct);
+  await foundProduct.addCatrgory("Outdoors");
+  console.log(foundProduct);
+};
+
+findProduct();
 
 // //not including a required property (name)
 // const bike = new Product({
@@ -100,23 +126,23 @@ const Product = new mongoose.model("Product", productSchema);
 
 // helmet2.save().then(success).catch(error);
 
-//using object datatype for qty
-const tesla = new Product({
-  name: "Model S",
-  price: 690000,
-  color: "Silver",
-  onSale: true,
-  categories: ["accesories"],
-  size: "XL",
-});
+// //using object datatype for qty
+// const tesla = new Product({
+//   name: "Model S",
+//   price: 690000,
+//   color: "Silver",
+//   onSale: true,
+//   categories: ["accesories"],
+//   size: "XL",
+// });
 
-tesla.save().then(success).catch(error);
+// tesla.save().then(success).catch(error);
 
-//updating with validations
-Product.findOneAndUpdate(
-  { name: "Model S" },
-  { price: -19.99 },
-  { new: true, runValidators: true }
-)
-  .then(success)
-  .catch(error);
+// //updating with validations
+// Product.findOneAndUpdate(
+//   { name: "Model S" },
+//   { price: -19.99 },
+//   { new: true, runValidators: true }
+// )
+//   .then(success)
+//   .catch(error);
