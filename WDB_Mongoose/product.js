@@ -106,3 +106,12 @@ const tesla = new Product({
 });
 
 tesla.save().then(success).catch(error);
+
+//updating with validations
+Product.findOneAndUpdate(
+  { name: "Model S" },
+  { price: -19.99 },
+  { new: true, runValidators: true }
+)
+  .then(success)
+  .catch(error);
