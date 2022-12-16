@@ -12,12 +12,10 @@ mongoose
   });
 
 function success(data) {
-  console.log("PRODUCT SAVED TO DB!");
   console.log(data);
 }
 
 function error(err) {
-  console.log("ERROR SAVING TO DB!");
   console.log(err);
 }
 
@@ -28,6 +26,16 @@ const personSchema = new mongoose.Schema({
 
 personSchema.virtual("fullName").get(function () {
   return `${this.first} ${this.last}`;
+});
+
+personSchema.pre("save", async function () {
+  this.first = "YO";
+  this.last = "MAMA";
+  console.log("ABOUT TO SAVE!");
+});
+
+personSchema.post("save", async function () {
+  console.log("JUST SAVED!");
 });
 
 const Person = new mongoose.model("Person", personSchema);
