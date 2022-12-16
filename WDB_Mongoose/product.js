@@ -11,14 +11,41 @@ mongoose
     console.log(err);
   });
 
+function success(data) {
+  console.log("PRODUCT SAVED TO DB!");
+  console.log(data);
+}
+
+function error(err) {
+  console.log("ERROR SAVING TO DB!");
+  console.log(err);
+}
+
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    maxLength: 20,
   },
   price: {
     type: Number,
     required: true,
+    min: 0,
+  },
+  onSale: {
+    type: Boolean,
+    default: false,
+  },
+  categories: [String],
+  qty: {
+    online: {
+      type: Number,
+      default: 0,
+    },
+    inStore: {
+      type: Number,
+      default: 0,
+    },
   },
 });
 
@@ -29,16 +56,7 @@ const bike = new Product({
   price: 599,
 });
 
-bike
-  .save()
-  .then((data) => {
-    console.log("PRODUCT SAVED TO DB!");
-    console.log(data);
-  })
-  .catch((err) => {
-    console.log("ERROR SAVING TO DB!");
-    console.log(err);
-  });
+bike.save().then(success).catch(error);
 
 //using different datatype(String) for price(Number )
 const bike2 = new Product({
@@ -46,16 +64,7 @@ const bike2 = new Product({
   price: "799",
 });
 
-bike2
-  .save()
-  .then((data) => {
-    console.log("PRODUCT SAVED TO DB!");
-    console.log(data);
-  })
-  .catch((err) => {
-    console.log("ERROR SAVING TO DB!");
-    console.log(err);
-  });
+bike2.save().then(success).catch(error);
 
 //adding property that is not present in product schema (color)
 const bike3 = new Product({
@@ -64,13 +73,36 @@ const bike3 = new Product({
   color: "red",
 });
 
-bike3
-  .save()
-  .then((data) => {
-    console.log("PRODUCT SAVED TO DB!");
-    console.log(data);
-  })
-  .catch((err) => {
-    console.log("ERROR SAVING TO DB!");
-    console.log(err);
-  });
+bike3.save().then(success).catch(error);
+
+//name is longer than maxlength, price is less than 0
+const helmet = new Product({
+  name: "Bike helmet from helmet makers",
+  price: -29.99,
+  color: "black",
+  onSale: true,
+});
+
+helmet.save().then(success).catch(error);
+
+//using array datatype for categories
+const helmet2 = new Product({
+  name: "Bike helmet",
+  price: 29.99,
+  color: "black",
+  onSale: true,
+  categories: ["accesories"],
+});
+
+helmet2.save().then(success).catch(error);
+
+//using object datatype for qty
+const tesla = new Product({
+  name: "Model S",
+  price: 690000,
+  color: "Silver",
+  onSale: true,
+  categories: ["accesories"],
+});
+
+tesla.save().then(success).catch(error);
