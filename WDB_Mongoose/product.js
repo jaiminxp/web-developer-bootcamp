@@ -30,7 +30,7 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
-    min: 0,
+    min: [0, "The price must be positive"],
   },
   onSale: {
     type: Boolean,
@@ -47,54 +47,58 @@ const productSchema = new mongoose.Schema({
       default: 0,
     },
   },
+  size: {
+    type: String,
+    enum: ["S", "M", "L"],
+  },
 });
 
 const Product = new mongoose.model("Product", productSchema);
 
-//not including a required property (name)
-const bike = new Product({
-  price: 599,
-});
+// //not including a required property (name)
+// const bike = new Product({
+//   price: 599,
+// });
 
-bike.save().then(success).catch(error);
+// bike.save().then(success).catch(error);
 
-//using different datatype(String) for price(Number )
-const bike2 = new Product({
-  name: "Mountain Bike",
-  price: "799",
-});
+// //using different datatype(String) for price(Number )
+// const bike2 = new Product({
+//   name: "Mountain Bike",
+//   price: "799",
+// });
 
-bike2.save().then(success).catch(error);
+// bike2.save().then(success).catch(error);
 
-//adding property that is not present in product schema (color)
-const bike3 = new Product({
-  name: "Mountain Bike",
-  price: 999,
-  color: "red",
-});
+// //adding property that is not present in product schema (color)
+// const bike3 = new Product({
+//   name: "Mountain Bike",
+//   price: 999,
+//   color: "red",
+// });
 
-bike3.save().then(success).catch(error);
+// bike3.save().then(success).catch(error);
 
-//name is longer than maxlength, price is less than 0
-const helmet = new Product({
-  name: "Bike helmet from helmet makers",
-  price: -29.99,
-  color: "black",
-  onSale: true,
-});
+// //name is longer than maxlength, price is less than 0
+// const helmet = new Product({
+//   name: "Bike helmet from helmet makers",
+//   price: -29.99,
+//   color: "black",
+//   onSale: true,
+// });
 
-helmet.save().then(success).catch(error);
+// helmet.save().then(success).catch(error);
 
-//using array datatype for categories
-const helmet2 = new Product({
-  name: "Bike helmet",
-  price: 29.99,
-  color: "black",
-  onSale: true,
-  categories: ["accesories"],
-});
+// //using array datatype for categories
+// const helmet2 = new Product({
+//   name: "Bike helmet",
+//   price: 29.99,
+//   color: "black",
+//   onSale: true,
+//   categories: ["accesories"],
+// });
 
-helmet2.save().then(success).catch(error);
+// helmet2.save().then(success).catch(error);
 
 //using object datatype for qty
 const tesla = new Product({
@@ -103,6 +107,7 @@ const tesla = new Product({
   color: "Silver",
   onSale: true,
   categories: ["accesories"],
+  size: "XL",
 });
 
 tesla.save().then(success).catch(error);
