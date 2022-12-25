@@ -30,9 +30,9 @@
 
       <label for="category">Select Category:</label>
       <select name="category" id="category">
-        <option value="fruit">fruit</option>
-        <option value="vegetable">vegetable</option>
-        <option value="dairy">dairy</option>
+        <% for(let category of categories) { %>
+        <option <%= category === product.category ? 'selected' : '' %>  value="<%= category %>"><%= category %></option>
+        <% } %>
       </select>
       <button>Submit</button>
     </form>
