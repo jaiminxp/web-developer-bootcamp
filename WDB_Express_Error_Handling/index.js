@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const AppError = require('./AppError');
 
 app.use(morgan('dev'));
 
@@ -18,8 +19,7 @@ const verifyPassword = (req, res, next) => {
   }
 
   //   res.send('SORRY, YOU NEED A PASSWORD!!!');
-  res.status(401);
-  throw new Error('SORRY, YOU NEED A PASSWORD!!!');
+  throw new AppError('SORRY, YOU NEED A PASSWORD!!!', 401);
 };
 
 //middleware for specific path
@@ -44,6 +44,10 @@ app.get('/error', (req, res) => {
   cat.fly();
 });
 
+app.get('/admin', (req, res) => {
+  throw new AppError('You are not an admin', 403);
+});
+
 // 404 route
 app.use((req, res) => {
   res.status(404).send('NOT FOUND');
@@ -51,9 +55,8 @@ app.use((req, res) => {
 
 //error handler middleware
 app.use((err, req, res, next) => {
-  console.log('ERRROR❗️');
-  console.log(err);
-  next(err);
+  const { status = 500, message = 'Something went wrong' } = err;
+  res.status(status).send(message);
 });
 
 app.listen(3000, () => {
