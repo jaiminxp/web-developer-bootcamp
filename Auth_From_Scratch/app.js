@@ -5,6 +5,7 @@ const ejsMate = require('ejs-mate');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const User = require('./models/user');
+const session = require('express-session');
 
 mongoose.set('strictQuery', true);
 mongoose
@@ -18,6 +19,7 @@ mongoose
   });
 
 // EXPRESS CONFIG AND MIDDLEWARES
+app.use(session({ secret: '3C82C489F33261B4231D1EA3D173F' }));
 app.use(express.urlencoded({ extended: true }));
 app.engine('ejs', ejsMate);
 
@@ -33,6 +35,10 @@ app.get('/register', (req, res) => {
   res.render('register', { title: 'Register' });
 });
 
+app.get('/login', (req, res) => {
+  res.render('login', { title: 'Login' });
+});
+
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
   const hash = await bcrypt.hash(password, 12);
@@ -43,11 +49,29 @@ app.post('/register', async (req, res) => {
   });
 
   await user.save();
+
+  req.session.user_id = user._id;
   res.redirect('/');
 });
 
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  const validPassword = await bcrypt.compare(password, user.password);
+
+  if (validPassword) {
+    req.session.user_id = user._id;
+    res.redirect('/secret');
+  } else {
+    res.redirect('/login');
+  }
+});
+
 app.get('/secret', (req, res) => {
-  res.send('!!SECRET!!');
+  if (!req.session.user_id) {
+    res.redirect('/login');
+  }
+  res.send('you are logged in! you can now see the SECRET!!');
 });
 
 app.listen(3000, () => {
