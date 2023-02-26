@@ -26,6 +26,15 @@ app.engine('ejs', ejsMate);
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
 
+//CUSTOM MIDDLEWARES
+function requireLogin(req, res, next) {
+  if (!req.session.user_id) {
+    return res.redirect('/login');
+  }
+
+  next();
+}
+
 // ROUTES
 app.get('/', (req, res) => {
   res.send('HOME PAGE');
@@ -72,10 +81,7 @@ app.post('/logout', async (req, res) => {
   res.redirect('/login');
 });
 
-app.get('/secret', (req, res) => {
-  if (!req.session.user_id) {
-    return res.redirect('/login');
-  }
+app.get('/secret', requireLogin, (req, res) => {
   res.render('secret', { title: 'Secret' });
 });
 
